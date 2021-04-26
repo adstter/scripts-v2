@@ -8,7 +8,8 @@ export const encodeToAdstterStandard = (file) => {
         result.output = `processed-videos/${file}`;
         let command = ffmpeg(file);
 
-        command.withFPS(20);
+        command.withFpsInput(15);
+        command.withOutputFps(15);
         command.withVideoBitrate(`1500k`);
         command.audioFilters('volume=-13dB');
 
@@ -31,7 +32,7 @@ export const downloadYouTubeVideo = (videoId) => {
         console.log(`Descargando video ${videoId}`);
         let video = youtubedl(`http://www.youtube.com/watch?v=${videoId}`,
             // Optional arguments passed to youtube-dl.
-            ['--format=22/37/18'],
+            ['--format=22/18'],
             // Additional options can be given for calling `child_process.execFile()`.
         );
         video.on('end', () => {
