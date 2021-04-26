@@ -7,10 +7,7 @@ export const encodeToAdstterStandard = (file) => {
         let result = {};
         result.output = `processed-videos/${file}`;
         let command = ffmpeg(file);
-
-        command.withFpsInput(15);
-        command.withOutputFps(15);
-        command.withVideoBitrate(`1500k`);
+        
         command.audioFilters('volume=-13dB');
 
         command.on('end', function () {
