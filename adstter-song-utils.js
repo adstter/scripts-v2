@@ -36,7 +36,10 @@ export const uploadFile = async (fileToUpload) => {
             }
             console.log(`Archivo cargado exitosamente`);
             console.log(body);
-            resolve(JSON.parse(body));
+            let bucket = 'garfenter-user-papiro'
+            let node = JSON.parse(body).blobInfo.gsObjectName.replace('/gs/garfenter-user-papiro/', '')
+            let newDownloadUrl = `https://www.googleapis.com/download/storage/v1/b/${bucket}/o/${node}?alt=media`
+            resolve(newDownloadUrl);
         });
         let form = uploadFileRequest.form();
         console.log(`Archivo a cargar: ${fileToUpload}`);

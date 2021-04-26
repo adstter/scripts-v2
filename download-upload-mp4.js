@@ -18,7 +18,8 @@ const processSongs = async (song) => {
         let videoLocation = await downloadYouTubeVideo(song.externalVideoId);
         let newVideoLocation = await encodeToAdstterStandard(videoLocation);
         song.videoUrl = await uploadFile(newVideoLocation);
-        await updateSong(song);
+        const resultSong = await updateSong(song);
+        console.log(resultSong);
     } catch (ex) {
         console.log(ex);
     }
