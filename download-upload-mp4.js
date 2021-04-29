@@ -11,7 +11,7 @@ const start = async () => {
 }
 
 const processSongs = async (song) => {
-    if (!song.externalVideoId || song.certificationState !== 'CERTIFIED') {
+    if (!song.externalVideoId || song.videoUrl || song.certificationState !== 'CERTIFIED') {
         return;
     }
     try {
