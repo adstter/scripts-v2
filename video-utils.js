@@ -1,26 +1,20 @@
 import youtubedl from 'youtube-dl';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
+import { exec } from 'child_process';
+
 export const encodeToAdstterStandard = (file) => {
     console.log('Encoding to video to adstter standard');
     return new Promise((resolve, reject) => {
-        let result = {};
-        result.output = `processed-videos/${file}`;
-        let command = ffmpeg(file);
-        
-        command.audioFilters('volume=-13dB');
-
-        command.on('end', function () {
-            console.log('Encoding completed...');
-            resolve(result.output);
+        const outputFile = `processed-videos/${file}`;
+        const normalizeEbu = `ffmpeg-normalize ${file} -vf -t -13 -lrt 1 -o ${outputFile} -c:a libmp3lame -b:a 192K`
+        exec(normalizeEbu, (err, stdout, stderr) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve(outputFile);
         });
-
-        command.on('error', function (err) {
-            console.log(err);
-            reject();
-        });
-
-        command.save(result.output);
     });
 }
 
