@@ -9,27 +9,51 @@ export const findSongsByPlaylistsId = async (playlistId) => {
     return result.items;
 }
 
-export const updateSong = async (song) => {
-    console.log('Updating song info');
-    const result = await fetch(`https://papirodev.appspot.com/_ah/api/api/v2/audios/${song.dbid.id}`, {
-        method: 'put',
-        body: JSON.stringify(song),
-        headers: { 'Content-Type': 'application/json' },
-    })
-    return await result.json();
+export const updateSong = async (song, retry = 0) => {
+    try {
+        console.log('Updating song info');
+        const result = await fetch(`https://papirodev.appspot.com/_ah/api/api/v2/audios/${song.dbid.id}`, {
+            method: 'put',
+            body: JSON.stringify(song),
+            headers: { 'Content-Type': 'application/json' },
+        })
+        return await result.json();
+    } catch (tr) {
+        if (retry < 10) {
+            try {
+                await updateSong(song, retry + 1);
+            } catch (tr) {
+
+            }
+        } else {
+            throw tr;
+        }
+    }
 }
 
-const createUploadUrl = async () => {
-    console.log('Creating upload url')
-    const result = await fetch(`https://papirodev.appspot.com/_ah/api/api/v2/files/create-url`);
-    const url = await result.json();
-    return url.result;
+const createUploadUrl = async (retry = 0) => {
+    try {
+        console.log('Creating upload url')
+        const result = await fetch(`https://papirodev.appspot.com/_ah/api/api/v2/files/create-url`);
+        const url = await result.json();
+        return url.result;
+    } catch (tr) {
+        if (retry < 10) {
+            try {
+                await createUploadUrl(retry + 1);
+            } catch (tr) {
+
+            }
+        } else {
+            throw tr;
+        }
+    }
 }
 
 export const uploadFile = async (fileToUpload) => {
     console.log('Uploading file...')
     const uploadUrl = await createUploadUrl();
-    const promise =  new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
         let uploadFileRequest = request.post(uploadUrl, (err, resp, body) => {
             if (err) {
                 reject(resp);
