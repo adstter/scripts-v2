@@ -20,8 +20,8 @@ const processSongs = async (song) => {
         let newVideoLocation = await encodeToAdstterStandard(videoLocation);
         song.videoUrl = await uploadFile(newVideoLocation);
         const resultSong = await updateSong(song);
-        fs.unlink(newVideoLocation);
-        fs.unlink(videoLocation);
+        fs.unlink(newVideoLocation, (err) => { });
+        fs.unlink(videoLocation, (err) => { });
         console.log(resultSong);
     } catch (ex) {
         console.log(ex);
