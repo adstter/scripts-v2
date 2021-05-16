@@ -2,12 +2,15 @@ import { findSongsByPlaylistsId, updateSong, uploadFile } from './adstter-song-u
 import { encodeToAdstterStandard, downloadYouTubeVideo } from './video-utils.js';
 import fs from 'fs';
 
-let playlistCode = process.argv[2];
+let playlistCodes = process.argv[2];
 
 const start = async () => {
-    let songs = await findSongsByPlaylistsId(playlistCode);
-    for (let song of songs) {
-        await processSongs(song);
+    let playlists = playlistCodes.split(",");
+    for (let playlistCode of playlists) {
+        let songs = await findSongsByPlaylistsId(playlistCode);
+        for (let song of songs) {
+            await processSongs(song);
+        }
     }
 }
 
