@@ -23,11 +23,7 @@ const processSongs = async (song) => {
         let videoLocation = await downloadYouTubeVideo(song.externalVideoId, videoType);
         let newVideoLocation = await encodeToAdstterStandard(videoLocation);
         const videoUrl = await uploadFile(newVideoLocation);
-        if (videoType === 'SD') {
-            song.videoUrl = videoUrl;
-        } else {
-            song.hdVideoUrl = videoUrl;
-        }
+        song.videoUrl = videoUrl;
         const resultSong = await updateSong(song);
         fs.unlink(newVideoLocation, (err) => { });
         fs.unlink(videoLocation, (err) => { });
